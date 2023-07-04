@@ -1,35 +1,49 @@
 const http=require('http');
+const fs= require('fs');
 
 const server=http.createServer((req,res)=>{
-console.log(req.url, req.method, req.headers);
+const url=req.url;
+const method=req.method;
 
+ if(url=='/message' &&  method=="POST"){
+const body=[];
+    req.on('data', (chunk)=>{
+        console.log(chunk);
+         body.push(chunk);
+    })
 
-if(req.url=='/home'){
-    res.setHeader('Content-Type','text/html');
-   res.write('<html>');
-res.write('<head><title>Home page</title></head>');
-res.write('<body><h1>Welcome home</h1></body>');
-res.write('</html>');
-res.end();
+  return  req.on('end', ()=>{
+const parsedBody=Buffer.concat(body).toString();
+const message=parsedBody.split('=')[1];
+fs.writeFile('message.txt',message, err => {
+  if(err){
+    console.log(err);
+  }
+  
+res.statusCode=302;
+res.setHeader('Location','/');
+return res.end();
+});
+
+    });
 }
 
-else if(req.url== '/about'){
-    res.setHeader('Content-Type','text/html');
-  res.write('<html>');
-res.write('<head><title>About page</title></head>');
-res.write('<body><h1> Welcome to About Us page</h1></body>');
-res.write('</html>');
-res.end();  
-}
+if (url == '/') {
+    fs.readFile('message.txt', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+      }
+    console.log(data);
+      res.write('<html>');
+      res.write('<body>');
+      res.write(`${data}`);
+      res.write(`<body> <form action="/message" method="POST"> <label for="Text">Enter The Text:</label> <br> <input type="text" id="Text" name="Text"><button type="submit">Send</button> </form>     </body>`);
+      res.write('</body>');
+      res.write('</html>');
+      return res.end();
+    });
+  }
 
-else{
-    res.setHeader('Content-Type','text/html');
-res.write('<html>');
-res.write('<head><title>Js project page</title></head>');
-res.write('<body><h1>Welcome to my Node Js project</h1></body>');
-res.write('</html>');
-res.end();
-}
 
 });
 
