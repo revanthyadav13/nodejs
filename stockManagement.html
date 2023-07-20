@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="F:\Revanth files\nodejs\stockManagement.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    
+    </head>
+    <body>
+        <form id="stockManagement">
+            <label for="candyname">Candy Name:</label><br>
+            <input type="text" id="candyname" required >
+            <label for="description">Description:</label><br>
+            <input type="text" id="description" required>
+            <label for="price">Price(Rs):</label><br>
+            <input type="text" id="price" required >
+            <label for="quantity">Quantity:</label><br>
+            <input type="number" id="quantity" required>
+            <button id="addItem">Add Item</button>
+        </form>
+   <ul id="list-items"></ul>
+   <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+   <script src="stockManagement.js"></script>
+         
+    </body>
+    </html>
