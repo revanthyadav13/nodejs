@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="F:\Revanth files\nodejs\ToDosListApp.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    
+    </head>
+    <body>
+        <form id="TodoListApp">
+            <label for="toDoName">ToDo Name:</label><br>
+            <input type="text" id="toDoName" required >
+            <label for="description">Description:</label><br>
+            <input type="text" id="description" required>
+            <button id="addItem">Add Item</button>
+    </form>
+   <h3>To Do's Remaining</h3>
+   <ul id="list-items1"></ul>
+   <h3>To Do's Done</h3>
+   <ul id="list-items2"></ul>
+   <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+   <script src="ToDosListApp.js"></script>
+         
+    </body>
+    </html>
