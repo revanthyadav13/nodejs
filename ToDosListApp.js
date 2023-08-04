@@ -1,20 +1,4 @@
- document.addEventListener("DOMContentLoaded", fetchFromDatabase);
-
-
-function fetchFromDatabase() {
-  axios
-    .get("http://localhost:3000/toDo/get-toDos")
-    .then((response) => {
-      for (var i = 0; i < response.data.allToDos.length; i++) {
-        showToDoDetails(response.data.allToDos[i]);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
-
-
+document.addEventListener("DOMContentLoaded", fetchFromDatabase);
 document.getElementById("toDoName").focus();
 
 var addItemBtn=document.getElementById("addItem");
@@ -38,6 +22,41 @@ function saveToDatabase(event){
    }
 
 
+function fetchFromDatabase() {
+  axios
+    .get("http://localhost:3000/toDo/get-toDos")
+    .then((response) => {
+      for (var i = 0; i < response.data.allToDos.length; i++) {
+        showToDoDetails(response.data.allToDos[i]);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+
+     axios
+    .get("http://localhost:3000/toDo/fetchToDosDone")
+    .then((response) => {
+      for (var i = 0; i < response.data.allToDosDone.length; i++) {
+        showToDosDoneDetails(response.data.allToDosDone[i]);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+
+function showToDosDoneDetails(details) {
+      var parentEle2 = document.getElementById("list-items2");
+      var childEle2 = document.createElement("li");
+      childEle2.setAttribute("id", "list-item2");
+      childEle2.textContent=`ToDo Name : ${details.toDoName}        Description: ${details.description}`;
+      parentEle2.appendChild(childEle2);
+}
+
+
    function showToDoDetails(details){
 
     document.getElementById("toDoName").value="";
@@ -46,56 +65,45 @@ function saveToDatabase(event){
     var parentEle1= document.getElementById("list-items1");
     var childEle1=document.createElement("li");
     childEle1.setAttribute("id","list-item1");
-    childEle1.textContent="ToDo Name:"+details.toDoName+"---"+"Description:"+details.description;
+    childEle1.textContent=`ToDo Name : ${details.toDoName}        Description : ${details.description}`;
     parentEle1.appendChild(childEle1);
 
 
- 
-
-    function moveToDoToDoneList(toDoId) {
-  const parentEle1 = document.getElementById("list-items1");
-  const parentEle2 = document.getElementById("list-items2");
-  const toDoElement = document.getElementById(`list-item1-${toDoId}`);
-
-  if (toDoElement) {
-    parentEle1.removeChild(toDoElement);
-    parentEle2.appendChild(toDoElement);
-  }
-}
-
 var tickBtn=document.createElement("button");
+tickBtn.textContent="\u2713";
 tickBtn.setAttribute("toDo-id",details.id);
 tickBtn.style.backgroundColor="green";
-var tickIcon = document.createElement("i");
-tickIcon.className = "fas fa-check";
-tickBtn.appendChild(tickIcon);
 tickBtn.addEventListener("click",tick)
 
+var parentEle2 = document.getElementById("list-items2");
+      var childEle2 = document.createElement("li");
+      childEle2.setAttribute("id", "list-item2");
+      
+
 function tick(event){
+  event.preventDefault();
    const toDoId = event.target.getAttribute("toDo-id");
-    var parentEle2= document.getElementById("list-items2");
-    var childEle2=document.createElement("li");
-    childEle2.setAttribute("id","list-item2");
-    childEle2.textContent="ToDo Name:"+details.toDoName+"---"+"Description:"+details.description;
-    parentEle2.appendChild(childEle2); 
-  deleteToDo(event,toDoId)
-    }
+    axios
+    .post('http://localhost:3000/toDo/tick-toDo',{ id: toDoId })
+    .then((response) => {
+      parentEle1.removeChild(childEle1);
+      childEle2.textContent=`ToDo Name : ${details.toDoName}        Description : ${details.description}`;
+      parentEle2.appendChild(childEle2);
+     })
+    .catch((err) => console.log(err));
+   }
 childEle1.appendChild(tickBtn);
 
   
 var delBtn =document.createElement("button");
+delBtn.textContent="\u2717";
 delBtn.setAttribute("toDo-id",details.id);
 delBtn.style.backgroundColor="red";
-
-var crossIcon = document.createElement("i");
-crossIcon.className = "fas fa-times";
-delBtn.appendChild(crossIcon);
-
 delBtn.addEventListener("click",deleteToDo);
 
-function deleteToDo(event,toDoId){
+function deleteToDo(event){
     event.preventDefault();
-     toDoId = event.target.getAttribute("toDo-id");
+   const toDoId = event.target.getAttribute("toDo-id");
   axios
     .delete(`http://localhost:3000/toDo/delete-toDo/${toDoId}`)
     .then((response) => {
@@ -105,6 +113,4 @@ function deleteToDo(event,toDoId){
   parentEle1.removeChild(childEle1); 
 }
 childEle1.appendChild(delBtn); 
-
-
 }
